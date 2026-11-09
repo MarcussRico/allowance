@@ -195,6 +195,12 @@ async function runTool(runId: string, allowanceId: string, name: string, input: 
 
 // ---------- runs ----------
 
+/** Every agent run across all workspaces in the last 24 hours. Caps what the hosted demo can spend on Claude. */
+export function runsInLastDay(): number {
+  const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
+  return (db().prepare("SELECT COUNT(*) AS n FROM runs WHERE created_at > ?").get(since) as { n: number }).n;
+}
+
 export function startRun(workspaceId: string, allowanceId: string, task: string): { runId: string; mode: "claude" | "scripted" } {
   const mode = process.env.ANTHROPIC_API_KEY ? "claude" : "scripted";
   const runId = `run_${crypto.randomBytes(9).toString("base64url")}`;

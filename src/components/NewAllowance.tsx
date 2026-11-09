@@ -53,7 +53,7 @@ export function NewAllowance({ onCreated }: { onCreated: () => void }) {
           mcpServers: {
             allowance: {
               command: "npx",
-              args: ["tsx", "mcp/server.ts"],
+              args: ["tsx", "/path/to/allowance/mcp/server.mts"],
               env: { ALLOWANCE_URL: typeof window !== "undefined" ? window.location.origin : "", ALLOWANCE_AGENT_KEY: key },
             },
           },
@@ -144,7 +144,7 @@ export function NewAllowance({ onCreated }: { onCreated: () => void }) {
               It&rsquo;s shown once. The agent uses it instead of a card or PayPal login, and you can revoke it any time.
             </p>
             <code className="dialog__key mono">{key}</code>
-            <p className="dialog__lede">To connect Claude Desktop or Claude Code, add this to its MCP config:</p>
+            <p className="dialog__lede">To connect Claude Desktop or Claude Code, add this to its MCP config, with the path to your copy of the Allowance repo:</p>
             <pre className="dialog__code mono">{mcpConfig}</pre>
             <div className="dialog__buttons">
               <button

@@ -37,7 +37,7 @@ Without PayPal keys the app runs against a clearly labelled **Simulated PayPal**
 
 - **Claude Sonnet 5.5** (Anthropic Messages API, `@anthropic-ai/sdk`) is the shopping agent, in `src/lib/agent.ts`. It has three strict tools, `check_allowance`, `search_shops` and `buy`, and no other way to act. Adaptive thinking is on, with summaries shown live in the feed, and Anthropic's server-side refusal fallback (`fallbacks: "default"`) is enabled.
 - The system prompt tells the agent not to split or retry held purchases. The rules engine enforces that independently, so the guard doesn't depend on the model behaving.
-- **An MCP server** (`mcp/server.ts`) gives any MCP agent, such as Claude Desktop or Claude Code, an allowance with one config block.
+- **An MCP server** (`mcp/server.mts`) gives any MCP agent, such as Claude Desktop or Claude Code, an allowance with one config block.
 - Without an Anthropic key, the agent runs a labelled **scripted** version of the demo task. The rules and PayPal calls in that mode are real.
 
 ## Architecture
@@ -86,7 +86,7 @@ Create an allowance in the app with **New allowance**, then copy the key it show
   "mcpServers": {
     "allowance": {
       "command": "npx",
-      "args": ["tsx", "/path/to/allowance/mcp/server.ts"],
+      "args": ["tsx", "/path/to/allowance/mcp/server.mts"],
       "env": { "ALLOWANCE_URL": "http://localhost:3000", "ALLOWANCE_AGENT_KEY": "alw_key_..." }
     }
   }

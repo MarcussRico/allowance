@@ -9,7 +9,7 @@
     "lint": "eslint",
     "test": "vitest run",
     "verify": "node scripts/verify.mjs",
-    "mcp": "tsx mcp/server.ts"
+    "mcp": "tsx mcp/server.mts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.6.0",

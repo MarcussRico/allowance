@@ -277,6 +277,13 @@ export function getPurchase(id: string): Purchase | null {
   return r ? toPurchase(r) : null;
 }
 
+/** A purchase without its approval token, safe to send anywhere but the owner's own dashboard. */
+export function withoutToken(p: Purchase): Omit<Purchase, "approvalToken"> {
+  const copy: Partial<Purchase> = { ...p };
+  delete copy.approvalToken;
+  return copy as Omit<Purchase, "approvalToken">;
+}
+
 export function purchaseForToken(token: string): Purchase | null {
   if (!token) return null;
   const r = db().prepare("SELECT * FROM purchases WHERE approval_token = ?").get(token) as Row | undefined;

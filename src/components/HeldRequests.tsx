@@ -18,6 +18,8 @@ function PhoneCode({ path }: { path: string }) {
   }, [path]);
   return (
     <figure className="held__qr">
+      {/* A generated data: URL, so next/image has nothing to optimise. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       {src ? <img src={src} alt="QR code that opens this request on your phone" width={110} height={110} /> : <span className="held__qr-ph" />}
       <figcaption>Answer on your phone</figcaption>
     </figure>

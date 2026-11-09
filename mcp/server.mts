@@ -8,7 +8,7 @@
  *
  *   ALLOWANCE_URL=https://your-allowance.onrender.com \
  *   ALLOWANCE_AGENT_KEY=alw_key_... \
- *   npx tsx mcp/server.ts
+ *   npx tsx mcp/server.mts
  */
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";

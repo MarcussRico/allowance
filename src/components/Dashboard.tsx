@@ -64,8 +64,13 @@ export function Dashboard({ initial, notice }: { initial: DashboardState; notice
   }
 
   async function freshWorkspace() {
-    await fetch("/api/workspace/reset", { method: "POST" });
-    window.location.href = "/";
+    const res = await fetch("/api/workspace/reset", { method: "POST" });
+    if (!res.ok) {
+      setConnectError((await res.json()).error ?? "Couldn't start over.");
+      return;
+    }
+    setConnectError(null);
+    await refresh();
   }
 
   const noticeText = notice ? PAYPAL_NOTICE[notice] ?? `PayPal said: ${notice}. Nothing was connected.` : null;
