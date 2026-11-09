@@ -9,7 +9,7 @@ export async function POST(req: Request) {
   const ws = await currentWorkspaceId();
   const origin = appUrl(req);
   try {
-    const { setupTokenId, approveUrl } = await paypal().startVaultSetup(`${origin}/paypal/return`, `${origin}/?paypal=cancelled`);
+    const { setupTokenId, approveUrl } = await paypal().startVaultSetup(`${origin}/paypal/return`, `${origin}/app?paypal=cancelled`);
     setPendingSetupToken(ws, setupTokenId);
     return json({ approveUrl });
   } catch (err) {

@@ -61,18 +61,18 @@ export function GuillocheBand({
           <rect x={cut} y="0" width={width - cut} height={height} />
         </clipPath>
       </defs>
-      <g clipPath={`url(#${clipLeft})`} stroke="var(--engrave)" strokeOpacity="0.32" fill="none" strokeWidth="0.8" vectorEffect="non-scaling-stroke">
+      <g clipPath={`url(#${clipLeft})`} stroke="var(--brass)" strokeOpacity="0.32" fill="none" strokeWidth="0.8" vectorEffect="non-scaling-stroke">
         {paths.map((d, i) => (
           <path key={i} d={d} vectorEffect="non-scaling-stroke" />
         ))}
       </g>
-      <g clipPath={`url(#${clipSpent})`} stroke="var(--ink)" strokeOpacity="0.85" fill="none" strokeWidth="0.9">
+      <g clipPath={`url(#${clipSpent})`} stroke="var(--text)" strokeOpacity="0.85" fill="none" strokeWidth="0.9">
         {paths.map((d, i) => (
           <path key={i} d={d} vectorEffect="non-scaling-stroke" />
         ))}
       </g>
       {cut > 0 && cut < width && (
-        <line x1={cut} x2={cut} y1="0" y2={height} stroke="var(--ink)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+        <line x1={cut} x2={cut} y1="0" y2={height} stroke="var(--text)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
       )}
     </svg>
   );
@@ -108,7 +108,7 @@ export function GuillocheRosette({ seed, size = 88 }: { seed: string; size?: num
       className="guilloche-rosette"
     >
       {paths.map((p, i) => (
-        <path key={i} d={p} fill="none" stroke="var(--engrave)" strokeOpacity={0.28 - i * 0.05} strokeWidth="0.35" />
+        <path key={i} d={p} fill="none" stroke="var(--brass)" strokeOpacity={0.28 - i * 0.05} strokeWidth="0.35" />
       ))}
     </svg>
   );
@@ -149,7 +149,7 @@ export function GuillocheFrame({ seed }: { seed: string }) {
   return (
     <svg className="guilloche-frame" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
       {paths.map((d, i) => (
-        <path key={i} d={d} fill="none" stroke="var(--engrave)" strokeOpacity={0.42 - i * 0.08} strokeWidth="0.7" vectorEffect="non-scaling-stroke" />
+        <path key={i} d={d} fill="none" stroke="var(--brass)" strokeOpacity={0.42 - i * 0.08} strokeWidth="0.7" vectorEffect="non-scaling-stroke" />
       ))}
     </svg>
   );

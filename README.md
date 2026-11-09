@@ -8,6 +8,8 @@ The agent never sees a card number or a PayPal login. It holds a scoped Allowanc
 
 Built for the [PayPal AI Hackathon](https://paypalaihackathon.devpost.com/) (Nov 2026).
 
+**Live:** https://allowance-23yv.onrender.com. The landing page is at `/` and the working demo at [`/app`](https://allowance-23yv.onrender.com/app).
+
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/MarcussRico/allowance)
 
 ## The problem
@@ -16,7 +18,7 @@ Agents can already shop, but the only way to let one pay is to give it your card
 
 ## Two-minute demo
 
-1. Open the app. You land on your own demo workspace, with one allowance already set up: **$60 a week, up to $30 a purchase, groceries and books only**.
+1. Open [`/app`](https://allowance-23yv.onrender.com/app). You land on your own demo workspace, with one allowance already set up: **$60 a week, up to $30 a purchase, groceries and books only**.
 2. Pick **Restock + headphones** and press **Send to agent**. Claude checks the allowance, searches the shops and buys the groceries. They're inside the limits, so PayPal is charged at once and the order id appears in the feed and the ledger.
 3. Next it tries **$89 headphones**: electronics, and over the per-purchase limit. The purchase is **held**. A "Waiting for you" panel appears with the plain-English reasons and a QR code.
 4. Scan the QR code with your phone (or open the request link). **Press and hold** to approve. A short tap does nothing, on purpose. PayPal is charged, and the agent, which was waiting, reports back.
@@ -58,7 +60,7 @@ Without PayPal keys the app runs against a clearly labelled **Simulated PayPal**
 - The cap check and the purchase record happen in **one transaction**, so two purchases can't both squeeze under the cap. Approvals are **single-use**: only the first answer counts.
 - **Approval links** are 192-bit random tokens that expire after 30 minutes. They let the owner answer from a phone without signing in.
 - **Each visitor gets their own workspace** (cookie-scoped), so judges testing at the same time don't see each other's data. The hosted demo has a per-workspace limit on agent runs.
-- **Stack:** Next.js 16 (App Router), SQLite (`node:sqlite`), AG Grid for the ledger, Zod for request validation.
+- **Stack:** Next.js 16 (App Router), SQLite (`node:sqlite`), AG Grid for the ledger, Zod for request validation. The landing page uses GSAP (ScrollTrigger for the pinned story) and five [React Bits](https://reactbits.dev) components (SplitText, CountUp, Threads, SpotlightCard, ScrollReveal), vendored unmodified in `src/components/reactbits/` under their licence.
 
 ## Run it locally
 

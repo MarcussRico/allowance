@@ -44,7 +44,7 @@ async function textOverlaps(page) {
 async function wheelScrolls(browserType, label) {
   const browser = await browserType.launch();
   const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
-  await page.goto(BASE);
+  await page.goto(`${BASE}/app`);
   await page.getByRole("heading", { name: "Your allowances" }).waitFor();
   await page.mouse.move(640, 400);
   const before = await page.evaluate(() => window.scrollY);
@@ -56,6 +56,62 @@ async function wheelScrolls(browserType, label) {
   await browser.close();
 }
 
+
+/** The landing page: hero renders, and the pinned story actually plays when scrolled with a real wheel. */
+async function landing(browserType, label) {
+  const browser = await browserType.launch();
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  const errors = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
+  await page.goto(BASE);
+  await page.getByRole("heading", { name: /Give your agent an allowance/ }).waitFor();
+  await page.waitForTimeout(3200);
+  await page.screenshot({ path: `${OUT}/L1-${label}-hero.png` });
+  check(`${label} landing: no horizontal overflow`, await noHorizontalOverflow(page));
+  await page.mouse.move(720, 450);
+  const stampA = page.locator("[data-stamp='a']");
+  let sawPaid = false, sawHold = false, sawPhone = false, sawVoid = false;
+  for (let i = 0; i < 70; i++) {
+    await page.mouse.wheel(0, 140);
+    await page.waitForTimeout(120);
+    const st = await page.evaluate(() => {
+      const op = (sel) => Number(getComputedStyle(document.querySelector(sel)).opacity);
+      return { a: op("[data-stamp='a']"), b: op("[data-stamp='b']"), phone: op("[data-phone]"), v: op("[data-void]") };
+    });
+    if (st.a > 0.9 && !sawPaid) { sawPaid = true; await page.screenshot({ path: `${OUT}/L2-${label}-paid.png` }); }
+    if (st.b > 0.9 && !sawHold) { sawHold = true; }
+    if (st.phone > 0.9 && !sawPhone) { sawPhone = true; await page.screenshot({ path: `${OUT}/L3-${label}-phone.png` }); }
+    if (st.v > 0.9 && !sawVoid) { sawVoid = true; await page.screenshot({ path: `${OUT}/L4-${label}-void.png` }); break; }
+  }
+  check(`${label} landing: wheel scrolling plays the story (paid → held → phone → void)`, sawPaid && sawHold && sawPhone && sawVoid, JSON.stringify({ sawPaid, sawHold, sawPhone, sawVoid }));
+  for (let i = 0; i < 40; i++) await page.mouse.wheel(0, 400);
+  await page.waitForTimeout(800);
+  await page.screenshot({ path: `${OUT}/L5-${label}-lower.png`, fullPage: false });
+  check(`${label} landing: no console errors`, errors.length === 0, errors.slice(0, 2).join(" | "));
+  await browser.close();
+  void stampA;
+}
+
+async function landingMobile() {
+  const browser = await chromium.launch();
+  const ctx = await browser.newContext({ ...devices["iPhone SE"] });
+  const page = await ctx.newPage();
+  await page.goto(BASE);
+  await page.getByRole("heading", { name: /Give your agent an allowance/ }).waitFor();
+  await page.waitForTimeout(2500);
+  await page.screenshot({ path: `${OUT}/L6-mobile.png`, fullPage: true });
+  check("mobile landing: no horizontal overflow", await noHorizontalOverflow(page));
+  check("mobile landing: story shows as static cards", await page.locator(".how__static").isVisible());
+  const overlaps = await textOverlaps(page);
+  check("mobile landing: no overlapping text", overlaps.length === 0, overlaps.slice(0, 3).join(" | "));
+  await browser.close();
+}
+
+await landing(chromium, "Chromium");
+await landing(webkit, "WebKit");
+await landingMobile();
+
 const browser = await chromium.launch();
 const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
 const page = await ctx.newPage();
@@ -63,7 +119,7 @@ const consoleErrors = [];
 page.on("console", (m) => m.type() === "error" && consoleErrors.push(m.text()));
 page.on("pageerror", (e) => consoleErrors.push(e.message));
 
-await page.goto(BASE);
+await page.goto(`${BASE}/app`);
 await page.getByRole("heading", { name: "Your allowances" }).waitFor();
 await page.screenshot({ path: `${OUT}/01-dashboard.png`, fullPage: true });
 check("dashboard loads with the seeded allowance", await page.locator(".note__name").first().isVisible());
@@ -155,7 +211,7 @@ await page.screenshot({ path: `${OUT}/06-revoked.png`, fullPage: true });
 // Mobile dashboard.
 const mctx = await browser.newContext({ ...devices["iPhone SE"] });
 const m = await mctx.newPage();
-await m.goto(BASE);
+await m.goto(`${BASE}/app`);
 await m.getByRole("heading", { name: "Your allowances" }).waitFor();
 await m.screenshot({ path: `${OUT}/07-mobile-dashboard.png`, fullPage: true });
 check("mobile 320px: no horizontal overflow", await noHorizontalOverflow(m));

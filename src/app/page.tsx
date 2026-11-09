@@ -1,19 +1,28 @@
-import { Suspense } from "react";
-import { Dashboard } from "@/components/Dashboard";
-import { currentWorkspaceId } from "@/lib/session";
-import { dashboardState } from "@/lib/view";
+import type { Metadata } from "next";
+import { Hero } from "@/components/landing/Hero";
+import { HowItWorks } from "@/components/landing/HowItWorks";
+import { Developers, FinalCta, Footer, Nav, Numbers, OnPayPal, Problem, Safety } from "@/components/landing/Sections";
+import "@/components/landing/landing.css";
 
-async function Board({ searchParams }: { searchParams: PageProps<"/">["searchParams"] }) {
-  const ws = await currentWorkspaceId();
-  const params = await searchParams;
-  const notice = typeof params.paypal === "string" ? params.paypal : null;
-  return <Dashboard initial={dashboardState(ws)} notice={notice} />;
-}
+export const metadata: Metadata = {
+  title: "Allowance: give your AI agent an allowance, not your card",
+};
 
-export default function Home({ searchParams }: PageProps<"/">) {
+export default function Landing() {
   return (
-    <Suspense fallback={<p className="boot">Opening your allowances…</p>}>
-      <Board searchParams={searchParams} />
-    </Suspense>
+    <>
+      <Nav />
+      <main className="landing">
+        <Hero />
+        <Problem />
+        <HowItWorks />
+        <Safety />
+        <Numbers />
+        <OnPayPal />
+        <Developers />
+        <FinalCta />
+      </main>
+      <Footer />
+    </>
   );
 }

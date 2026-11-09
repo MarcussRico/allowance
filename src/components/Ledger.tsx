@@ -11,19 +11,20 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 type PurchaseView = DashboardState["purchases"][number];
 
 const ledgerTheme = themeQuartz.withParams({
-  backgroundColor: "#f7f8f3",
-  foregroundColor: "#15211b",
-  accentColor: "#2d4a8a",
-  borderColor: "#d6ddd1",
-  headerBackgroundColor: "#e9ede4",
-  headerTextColor: "#46544c",
+  backgroundColor: "#0f1a2e",
+  foregroundColor: "#ede6d3",
+  accentColor: "#c9a55e",
+  borderColor: "rgba(237, 230, 211, 0.1)",
+  headerBackgroundColor: "#15233d",
+  headerTextColor: "rgba(237, 230, 211, 0.74)",
   headerFontWeight: 600,
-  oddRowBackgroundColor: "#f2f4ee",
-  rowHoverColor: "#e6ebf3",
+  oddRowBackgroundColor: "#0d1729",
+  rowHoverColor: "rgba(201, 165, 94, 0.08)",
   fontFamily: "var(--font-sans)",
   fontSize: 13.5,
-  wrapperBorderRadius: 10,
+  wrapperBorderRadius: 14,
   spacing: 7,
+  browserColorScheme: "dark",
 });
 
 function StatusCell({ data }: ICellRendererParams<PurchaseView>) {

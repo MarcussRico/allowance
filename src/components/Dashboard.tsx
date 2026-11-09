@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { DashboardState } from "@/lib/view";
 import { AllowanceCard } from "./AllowanceCard";
@@ -80,11 +81,11 @@ export function Dashboard({ initial, notice }: { initial: DashboardState; notice
   return (
     <div className="shell">
       <header className="topbar">
-        <div className="brand">
+        <Link href="/" className="brand" aria-label="Allowance, home">
           <span className="brand__mark" aria-hidden="true" />
           <span className="brand__name">Allowance</span>
-          <span className="brand__line">Spending limits for AI agents, paid with PayPal</span>
-        </div>
+          <span className="brand__line">Live demo</span>
+        </Link>
         <div className="topbar__right">
           <span className={`paypal-state paypal-state--${state.paypalMode}`}>
             {state.paypalMode === "sandbox" ? "PayPal sandbox" : "Simulated PayPal"}
@@ -115,7 +116,7 @@ export function Dashboard({ initial, notice }: { initial: DashboardState; notice
       <section className="intro" aria-labelledby="intro-title">
         <div className="intro__copy">
           <h1 id="intro-title" className="intro__title">
-            Give your agent an allowance, <em>not your card.</em>
+            Give your agent an allowance. <em>Not your card.</em>
           </h1>
           <p className="intro__lede">
             Your AI agent shops within limits you set and pays through PayPal. Anything outside them waits for you to approve on your

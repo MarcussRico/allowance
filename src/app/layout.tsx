@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     "Give an AI agent an allowance instead of your card. It buys within your limits through PayPal; anything outside them waits for your approval on your phone.",
 };
 
-export const viewport: Viewport = { themeColor: "#EEF1EA" };
+export const viewport: Viewport = { themeColor: "#0A1120", colorScheme: "dark" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

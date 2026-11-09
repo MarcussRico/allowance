@@ -12,21 +12,23 @@
   gap: 16px 24px;
   flex-wrap: wrap;
   padding: 6px 0 22px;
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid var(--line-strong);
 }
 .brand {
   display: flex;
   align-items: baseline;
   gap: 12px;
   flex-wrap: wrap;
+  color: var(--text);
+  text-decoration: none;
 }
 .brand__mark {
   width: 22px;
   height: 22px;
   align-self: center;
   border-radius: 50%;
-  border: 1.5px solid var(--engrave);
-  background: repeating-radial-gradient(circle at 50% 50%, transparent 0 2px, rgba(45, 74, 138, 0.35) 2px 2.6px);
+  border: 1.5px solid var(--brass);
+  background: repeating-radial-gradient(circle at 50% 50%, transparent 0 2px, rgba(201, 165, 94, 0.5) 2px 2.6px);
 }
 .brand__name {
   font-family: var(--font-display);
@@ -36,7 +38,7 @@
   line-height: 1;
 }
 .brand__line {
-  color: var(--ink-soft);
+  color: var(--text-soft);
   font-size: 14px;
 }
 .topbar__right {
@@ -47,10 +49,10 @@
 }
 .paypal-state {
   font-size: 13px;
-  color: var(--ink-soft);
+  color: var(--text-soft);
   padding: 5px 10px 5px 22px;
   border-radius: 999px;
-  border: 1px solid var(--rule);
+  border: 1px solid var(--line-strong);
   position: relative;
   max-width: 100%;
   overflow-wrap: anywhere;
@@ -64,7 +66,10 @@
   height: 7px;
   margin-top: -3.5px;
   border-radius: 50%;
-  background: var(--engrave);
+  background: var(--brass);
+}
+.paypal-state::before {
+  background: var(--paid);
 }
 .paypal-state--simulated::before {
   background: var(--hold);
@@ -74,8 +79,8 @@
   margin: 16px 0 0;
   padding: 10px 14px;
   border-radius: var(--radius);
-  background: var(--engrave-soft);
-  color: var(--ink);
+  background: var(--brass-wash);
+  color: var(--text);
   font-size: 14px;
 }
 .notice--hold {
@@ -85,8 +90,9 @@
 /* ---------- held requests ---------- */
 .held {
   border-radius: var(--radius);
-  background: var(--hold-wash);
-  border: 1px solid color-mix(in srgb, var(--hold) 30%, transparent);
+  background: linear-gradient(180deg, rgba(242, 181, 74, 0.1), rgba(242, 181, 74, 0.03) 60%), var(--surface);
+  border: 1px solid rgba(242, 181, 74, 0.38);
+  box-shadow: 0 0 0 4px rgba(242, 181, 74, 0.06), var(--shadow);
   padding: 18px 22px;
   animation: held-in 260ms var(--ease-out);
 }
@@ -130,7 +136,7 @@
 .held__lines,
 .held__note {
   margin: 4px 0 0;
-  color: var(--ink-soft);
+  color: var(--text-soft);
   font-size: 14px;
 }
 .held__reasons {
@@ -163,13 +169,14 @@
   width: 110px;
   height: 110px;
   padding: 8px;
-  background: #fff;
+  /* QR codes need a light quiet zone to scan. */
+  background: var(--paper);
   border-radius: 8px;
 }
 .held__qr figcaption {
   margin-top: 6px;
   font-size: 12.5px;
-  color: var(--ink-soft);
+  color: var(--text-soft);
 }
 
 /* ---------- ledger ---------- */
@@ -178,8 +185,8 @@
   width: min(320px, 60vw);
   padding: 0 12px;
   border-radius: 999px;
-  border: 1px solid var(--rule);
-  background: #fff;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
 }
 .ledger__grid {
   width: 100%;
@@ -198,12 +205,12 @@
   white-space: nowrap;
 }
 .pill--completed {
-  background: #dfe7df;
-  color: var(--ink);
+  background: var(--paid-wash);
+  color: var(--paid);
 }
 .pill--charging {
-  background: var(--engrave-soft);
-  color: var(--engrave);
+  background: var(--brass-wash);
+  color: var(--brass);
 }
 .pill--held {
   background: var(--hold-wash);
@@ -224,12 +231,12 @@
 .dialog {
   width: min(520px, calc(100vw - 32px));
   max-height: calc(100dvh - 32px);
-  border: 1px solid var(--rule);
+  border: 1px solid var(--line-strong);
   border-radius: 14px;
   padding: 0;
-  background: var(--card);
-  color: var(--ink);
-  box-shadow: 0 30px 80px -30px rgba(21, 33, 27, 0.45);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 40px 100px -30px rgba(0, 0, 0, 0.8);
 }
 .dialog[open] {
   animation: dialog-in 200ms var(--ease-out);
@@ -241,7 +248,8 @@
   }
 }
 .dialog::backdrop {
-  background: rgba(21, 33, 27, 0.35);
+  background: rgba(4, 8, 16, 0.6);
+  backdrop-filter: blur(4px);
 }
 .dialog__form {
   display: grid;
@@ -256,7 +264,7 @@
 }
 .dialog__lede {
   margin: 0;
-  color: var(--ink-soft);
+  color: var(--text-soft);
   font-size: 14px;
 }
 .dialog label {
@@ -270,8 +278,8 @@
   min-height: 40px;
   padding: 0 10px;
   border-radius: 8px;
-  border: 1px solid var(--rule);
-  background: #fff;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
   font-weight: 400;
 }
 .dialog__row {
@@ -312,8 +320,8 @@
 .dialog__key {
   display: block;
   padding: 10px 12px;
-  background: #fff;
-  border: 1px solid var(--rule);
+  background: var(--bg);
+  border: 1px solid var(--line-strong);
   border-radius: 8px;
   overflow-wrap: anywhere;
 }
@@ -322,8 +330,8 @@
   padding: 10px 12px;
   max-height: 180px;
   overflow: auto;
-  background: var(--ink);
-  color: #e7ece4;
+  background: var(--text);
+  color: #d9d2bf;
   border-radius: 8px;
   font-size: 12px;
 }
@@ -331,8 +339,8 @@
 .colophon {
   margin-top: 40px;
   padding-top: 16px;
-  border-top: 1px solid var(--rule);
-  color: var(--ink-soft);
+  border-top: 1px solid var(--line-strong);
+  color: var(--text-soft);
   font-size: 13.5px;
   max-width: 760px;
 }
@@ -350,7 +358,7 @@
   min-height: 32px;
   padding: 0 12px;
   border-radius: 999px;
-  border: 1px solid var(--rule);
+  border: 1px solid var(--line-strong);
   background: transparent;
   font-size: 13.5px;
   cursor: pointer;
@@ -360,13 +368,13 @@
   transform: scale(0.97);
 }
 .chip--on {
-  background: var(--engrave-soft);
-  border-color: color-mix(in srgb, var(--engrave) 40%, transparent);
-  color: var(--engrave);
+  background: var(--brass-wash);
+  border-color: color-mix(in srgb, var(--brass) 40%, transparent);
+  color: var(--brass);
 }
 @media (hover: hover) and (pointer: fine) {
   .chip:hover:not(.chip--on) {
-    background: var(--paper-deep);
+    background: var(--surface-2);
   }
 }
 .btn--big {
@@ -385,15 +393,17 @@
 }
 .intro__title {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(38px, 4.6vw, 60px);
-  font-weight: 500;
-  line-height: 1.02;
-  letter-spacing: -0.025em;
+  font-size: clamp(36px, 4.2vw, 58px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.035em;
   text-wrap: balance;
 }
 .intro__title em {
-  color: var(--engrave);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--brass-bright);
   font-style: italic;
 }
 .intro__lede {
@@ -401,12 +411,12 @@
   max-width: 44ch;
   font-size: 17px;
   line-height: 1.5;
-  color: var(--ink-soft);
+  color: var(--text-soft);
 }
 
 .composer {
-  background: var(--card);
-  border: 1px solid var(--rule);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
   border-radius: 14px;
   padding: 18px;
   box-shadow: var(--shadow);
@@ -426,7 +436,7 @@
 }
 .composer__engine {
   font-size: 12.5px;
-  color: var(--ink-soft);
+  color: var(--text-soft);
 }
 .composer__presets {
   display: flex;
@@ -440,8 +450,8 @@
   min-height: 72px;
   padding: 10px 12px;
   border-radius: 8px;
-  border: 1px solid var(--rule);
-  background: #fff;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
   line-height: 1.45;
 }
 .composer__submit {
@@ -457,7 +467,7 @@
   align-items: center;
   gap: 8px;
   font-size: 13.5px;
-  color: var(--ink-soft);
+  color: var(--text-soft);
   min-width: 0;
   flex: 1;
 }
@@ -466,10 +476,10 @@
   flex: 1;
   min-height: 38px;
   border-radius: 8px;
-  border: 1px solid var(--rule);
-  background: #fff;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
   padding: 0 8px;
-  color: var(--ink);
+  color: var(--text);
 }
 .composer__error {
   margin: 10px 0 0;
@@ -482,8 +492,9 @@
   position: relative;
   padding: 22px 22px 18px;
   border-radius: 16px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.2)), var(--paper-deep);
-  border: 1px solid var(--rule);
+  background: linear-gradient(180deg, rgba(21, 35, 61, 0.7), rgba(15, 26, 46, 0.7));
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line-strong);
 }
 .stage__stations {
   display: grid;
@@ -494,8 +505,8 @@
   position: relative;
   padding: 16px 18px;
   border-radius: 12px;
-  background: var(--card);
-  border: 1px solid var(--rule);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
   transition: border-color 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
 }
 /* An engraved arrow in the gap before each station after the first. */
@@ -506,7 +517,7 @@
   top: 50%;
   width: 28px;
   height: 1.5px;
-  background: var(--engrave);
+  background: var(--brass);
   opacity: 0.6;
 }
 .station + .station::after {
@@ -516,14 +527,14 @@
   top: calc(50% - 4px);
   width: 8px;
   height: 8px;
-  border-top: 1.5px solid var(--engrave);
-  border-right: 1.5px solid var(--engrave);
+  border-top: 1.5px solid var(--brass);
+  border-right: 1.5px solid var(--brass);
   transform: rotate(45deg);
   opacity: 0.6;
 }
 .station--live {
-  border-color: color-mix(in srgb, var(--engrave) 55%, transparent);
-  box-shadow: 0 0 0 3px var(--engrave-soft);
+  border-color: color-mix(in srgb, var(--brass) 55%, transparent);
+  box-shadow: 0 0 0 4px var(--brass-wash);
 }
 .station--held {
   border-color: color-mix(in srgb, var(--hold) 55%, transparent);
@@ -539,7 +550,7 @@
   margin: 0;
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--engrave);
+  color: var(--brass);
 }
 .station__name {
   margin: 4px 0 0;
@@ -551,7 +562,7 @@
 .station__line {
   margin: 6px 0 0;
   font-size: 14px;
-  color: var(--ink);
+  color: var(--text);
   overflow-wrap: anywhere;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -565,7 +576,7 @@
   height: 6px;
   margin-left: 6px;
   border-radius: 50%;
-  background: var(--engrave);
+  background: var(--brass);
   vertical-align: middle;
   animation: pulse 1.1s ease-in-out infinite;
 }
@@ -586,13 +597,13 @@
   font-size: 12.5px;
   padding: 2px 8px;
   border-radius: 999px;
-  background: var(--paper);
-  border: 1px solid var(--rule);
+  background: var(--bg);
+  border: 1px solid var(--line-strong);
 }
 .station__fine {
   margin: 10px 0 0;
   font-size: 12.5px;
-  color: var(--ink-soft);
+  color: var(--text-soft);
   overflow-wrap: anywhere;
 }
 
@@ -609,7 +620,7 @@
   left: 16.66%;
   right: 16.66%;
   top: 50%;
-  border-top: 1.5px dashed color-mix(in srgb, var(--engrave) 45%, transparent);
+  border-top: 1.5px dashed color-mix(in srgb, var(--brass) 45%, transparent);
 }
 .stage__slip {
   position: relative;
@@ -624,18 +635,19 @@
   padding: 10px 16px;
   top: 2px;
   font-size: 13.5px;
-  color: var(--ink-soft);
-  background: var(--paper-deep);
+  color: var(--text-soft);
+  background: var(--surface-2);
 }
 
 /* ---------- slips and stamps ---------- */
 .slip {
   position: relative;
   padding: 16px 16px 14px;
-  background: #fbfcf8;
-  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--paper-ink);
+  border: 1px solid var(--line-strong);
   border-radius: 4px 4px 10px 10px;
-  box-shadow: 0 1px 0 rgba(21, 33, 27, 0.05), 0 10px 22px -16px rgba(21, 33, 27, 0.4);
+  box-shadow: 0 24px 40px -24px rgba(0, 0, 0, 0.8);
 }
 /* Perforated tear-off edge. */
 .slip::before {
@@ -645,10 +657,10 @@
   right: 6px;
   top: -4px;
   height: 8px;
-  background: radial-gradient(circle, var(--paper) 2.6px, transparent 3px) 0 50% / 11px 8px repeat-x;
+  background: radial-gradient(circle, var(--bg) 2.6px, transparent 3px) 0 50% / 11px 8px repeat-x;
 }
 .stage .slip::before {
-  background-image: radial-gradient(circle, var(--paper-deep) 2.6px, transparent 3px);
+  background-image: radial-gradient(circle, var(--surface) 2.6px, transparent 3px);
 }
 .slip__head {
   display: flex;
@@ -674,9 +686,9 @@
   list-style: none;
   margin: 8px 0 0;
   padding: 8px 0 0;
-  border-top: 1px dashed var(--rule);
+  border-top: 1px dashed var(--paper-line);
   font-size: 13.5px;
-  color: var(--ink-soft);
+  color: var(--paper-ink-soft);
 }
 .slip__lines li {
   display: flex;
@@ -688,7 +700,7 @@
   overflow-wrap: anywhere;
 }
 .slip__more {
-  color: var(--ink-faint);
+  color: var(--paper-ink-soft);
 }
 .slip__foot {
   display: flex;
@@ -699,7 +711,7 @@
   margin-top: 12px;
 }
 .slip__order {
-  color: var(--ink-faint);
+  color: var(--paper-ink-soft);
   font-size: 11.5px;
   overflow-wrap: anywhere;
 }
@@ -708,19 +720,20 @@
   padding: 8px 10px 8px 26px;
   border-radius: 6px;
   font-size: 13px;
-  background: var(--paper);
+  background: #ebe4d1;
+  color: var(--paper-ink);
 }
 .slip--held .slip__reasons {
-  background: var(--hold-wash);
+  background: #f3e2bd;
 }
 .slip--blocked .slip__reasons,
 .slip--declined .slip__reasons {
-  background: var(--block-wash);
+  background: #f1d6cf;
 }
 .slip__error {
   margin: 8px 0 0;
   font-size: 13px;
-  color: var(--block);
+  color: var(--ink-block);
 }
 .slip--compact .slip__amount {
   font-size: 24px;
@@ -736,7 +749,7 @@
   padding: 3px 12px 4px;
   border: 2px solid currentColor;
   border-radius: 6px;
-  box-shadow: inset 0 0 0 2px #fbfcf8, inset 0 0 0 3px currentColor;
+  box-shadow: inset 0 0 0 2px var(--paper), inset 0 0 0 3px currentColor;
   transform: rotate(-3deg);
   font-family: var(--font-display);
   font-style: italic;
@@ -759,16 +772,16 @@
   letter-spacing: 0.01em;
 }
 .stamp--paid {
-  color: var(--ink);
+  color: var(--ink-paid);
 }
 .stamp--hold {
-  color: var(--hold);
+  color: var(--ink-hold);
 }
 .stamp--block {
-  color: var(--block);
+  color: var(--ink-block);
 }
 .stamp--pending {
-  color: var(--engrave);
+  color: #2b3d66;
 }
 
 /* ---------- board ---------- */
@@ -814,17 +827,10 @@
   overflow: hidden;
   border-radius: 14px;
   background:
-    radial-gradient(120% 90% at 100% 50%, rgba(45, 74, 138, 0.07), transparent 60%),
-    linear-gradient(160deg, #f9faf5, #eff2ea);
-  border: 1px solid var(--rule);
+    radial-gradient(130% 100% at 100% 0%, rgba(201, 165, 94, 0.13), transparent 55%),
+    linear-gradient(160deg, #13203a, #0d1729);
+  border: 1px solid var(--line-strong);
   box-shadow: var(--shadow);
-}
-.guilloche-frame {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
 }
 .note__watermark {
   /* Beside the denomination, like a banknote's watermark; clear of the spend band. */
@@ -860,12 +866,12 @@
 .note__for {
   margin: 0;
   font-size: 13px;
-  color: var(--ink-soft);
+  color: var(--text-soft);
   min-width: 0;
   overflow-wrap: anywhere;
 }
 .note__for strong {
-  color: var(--ink);
+  color: var(--text);
   font-weight: 600;
 }
 .note__status {
@@ -874,8 +880,8 @@
   font-weight: 600;
   padding: 1px 9px;
   border-radius: 999px;
-  background: var(--engrave-soft);
-  color: var(--engrave);
+  background: var(--brass-wash);
+  color: var(--brass);
 }
 .note__status--paused {
   background: var(--hold-wash);
@@ -909,22 +915,17 @@
 }
 .note__of {
   font-size: 14px;
-  color: var(--ink-soft);
+  color: var(--text-soft);
 }
 .note__over {
   font-size: 13.5px;
   font-weight: 600;
   color: var(--hold);
 }
-.guilloche-band {
-  display: block;
-  width: 100%;
-  height: 30px;
-}
 .note__spent {
   margin: 6px 0 0;
   font-size: 12px;
-  color: var(--ink-faint);
+  color: var(--text-faint);
 }
 .note__rules {
   display: grid;
@@ -932,11 +933,11 @@
   gap: 12px;
   margin: 16px 0 0;
   padding-top: 14px;
-  border-top: 1px dashed var(--rule);
+  border-top: 1px dashed var(--line-strong);
 }
 .note__rules dt {
   font-size: 12px;
-  color: var(--ink-faint);
+  color: var(--text-faint);
 }
 .note__rules dd {
   margin: 2px 0 0;
@@ -954,10 +955,10 @@
 .note__serial {
   margin: 0;
   font-size: 12px;
-  color: var(--ink-faint);
+  color: var(--text-faint);
 }
 .note__serial .mono {
-  color: var(--ink-soft);
+  color: var(--text-soft);
   font-size: 13px;
 }
 .note__signature {
@@ -972,13 +973,13 @@
   font-size: 26px;
   line-height: 1;
   padding: 0 6px 2px 24px;
-  border-bottom: 1px solid var(--ink-soft);
-  color: var(--engrave);
+  border-bottom: 1px solid var(--text-soft);
+  color: var(--brass);
 }
 .note__sig-label {
   margin-top: 3px;
   font-size: 11.5px;
-  color: var(--ink-faint);
+  color: var(--text-faint);
 }
 .note__actions {
   display: flex;
@@ -1005,19 +1006,19 @@
 .story__empty {
   margin: 14px 0 0;
   padding: 18px;
-  color: var(--ink-soft);
-  border: 1px dashed var(--rule);
+  color: var(--text-soft);
+  border: 1px dashed var(--line-strong);
   border-radius: var(--radius);
   font-size: 14px;
 }
 .story__task {
   margin: 14px 0 16px;
   font-size: 14px;
-  color: var(--ink-soft);
+  color: var(--text-soft);
 }
 .story__task span {
   font-weight: 600;
-  color: var(--ink);
+  color: var(--text);
   margin-right: 6px;
 }
 .story__list {
@@ -1045,7 +1046,7 @@
 }
 .story__time {
   font-size: 12px;
-  color: var(--ink-faint);
+  color: var(--text-faint);
 }
 .story__entry--slip .story__time {
   padding-top: 18px;
@@ -1053,14 +1054,14 @@
 .story__step {
   margin: 0;
   font-size: 13.5px;
-  color: var(--ink-soft);
+  color: var(--text-soft);
   overflow-wrap: anywhere;
 }
 .story__kind--thinking .story__step {
   font-style: italic;
 }
 .story__kind--decision .story__step {
-  color: var(--ink);
+  color: var(--text);
   font-weight: 600;
 }
 .story__entry--problem .story__step {
@@ -1069,7 +1070,7 @@
 .story__say {
   margin: 6px 0 0;
   padding: 2px 0 2px 16px;
-  border-left: 2px solid var(--engrave);
+  border-left: 2px solid var(--brass);
   font-family: var(--font-display);
   font-style: italic;
   font-size: 20px;
@@ -1078,7 +1079,7 @@
 .story__working {
   margin: 10px 0 0 74px;
   font-size: 13px;
-  color: var(--ink-soft);
+  color: var(--text-soft);
 }
 .story__working::after {
   content: "";
@@ -1087,7 +1088,7 @@
   height: 6px;
   margin-left: 8px;
   border-radius: 50%;
-  background: var(--engrave);
+  background: var(--brass);
   vertical-align: middle;
   animation: pulse 1.1s ease-in-out infinite;
 }

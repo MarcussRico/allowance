@@ -1,29 +1,44 @@
-/* Allowance — security-paper palette.
-   Paper and ink come from banknotes and cheques: a sage-tinted ground, green-black
-   intaglio ink, an engraving blue for anything you can act on, and two signal
-   colours that mean exactly one thing each. */
+/* Allowance — midnight banknote.
+   A deep navy ground (not black), ivory type, and brass for the engraved lines that
+   say "money". Three signal colours each mean one thing: paid, waiting for you, blocked.
+   Slips and receipts stay paper-coloured, so money reads as something physical. */
 :root {
-  --paper: #eef1ea;
-  --paper-deep: #e3e8de;
-  --card: #f7f8f3;
-  --ink: #15211b;
-  --ink-soft: #46544c;
-  --ink-faint: #6f7c74;
-  --rule: #c9d1c4;
-  --engrave: #2d4a8a; /* actions, links, the security pattern */
-  --engrave-soft: #dfe5f1;
-  --hold: #9a6a12; /* waiting for you */
-  --hold-wash: #f3e7c9;
-  --block: #8c2b2b; /* blocked or declined */
-  --block-wash: #f1dcd8;
+  --bg: #0a1120;
+  --surface: #0f1a2e;
+  --surface-2: #15233d;
+  --line: rgba(237, 230, 211, 0.1);
+  --line-strong: rgba(237, 230, 211, 0.2);
+  --text: #ede6d3;
+  --text-soft: rgba(237, 230, 211, 0.74);
+  --text-faint: rgba(237, 230, 211, 0.52);
+  --brass: #c9a55e;
+  --brass-bright: #e6c98c;
+  --brass-wash: rgba(201, 165, 94, 0.14);
+  --paid: #8fd6ae;
+  --paid-wash: rgba(143, 214, 174, 0.12);
+  --hold: #f2b54a;
+  --hold-wash: rgba(242, 181, 74, 0.13);
+  --block: #f2806f;
+  --block-wash: rgba(242, 128, 111, 0.13);
+
+  /* Paper, for slips and receipts. Ink colours are for use on paper only. */
+  --paper: #f4efe1;
+  --paper-line: #ddd5c0;
+  --paper-ink: #17202e;
+  --paper-ink-soft: #4f5868;
+  --ink-paid: #1f5c3f;
+  --ink-hold: #8a5a0a;
+  --ink-block: #9a2f2f;
 
   --font-display: "Bodoni Moda", Didot, "Bodoni 72", serif;
   --font-sans: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-  --radius: 10px;
-  --shadow: 0 1px 0 rgba(21, 33, 27, 0.04), 0 8px 24px -12px rgba(21, 33, 27, 0.18);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --radius: 14px;
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 24px 60px -30px rgba(0, 0, 0, 0.7);
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 *,
@@ -34,21 +49,24 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  background: var(--bg);
+  color-scheme: dark;
 }
 
 body {
   margin: 0;
   min-height: 100dvh;
-  background-color: var(--paper);
-  /* Security-paper fibres: two faint fine-line grids and a soft wash, no image requests. */
-  background-image:
-    radial-gradient(1200px 500px at 85% -10%, rgba(45, 74, 138, 0.07), transparent 70%),
-    repeating-linear-gradient(115deg, rgba(21, 33, 27, 0.018) 0 1px, transparent 1px 7px),
-    repeating-linear-gradient(25deg, rgba(45, 74, 138, 0.02) 0 1px, transparent 1px 11px);
-  color: var(--ink);
+  background:
+    var(--grain),
+    radial-gradient(1100px 600px at 80% -10%, rgba(201, 165, 94, 0.08), transparent 70%),
+    radial-gradient(900px 700px at -10% 30%, rgba(60, 90, 160, 0.12), transparent 70%),
+    var(--bg);
+  color: var(--text);
   font-family: var(--font-sans);
-  font-size: 15px;
-  line-height: 1.5;
+  font-size: 15.5px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  /* Schibsted's tabular set widens the decimal point ("$60 . 00"); keep proportional punctuation. */
   font-feature-settings: "tnum" 0;
 }
 
@@ -61,14 +79,18 @@ textarea {
 }
 
 a {
-  color: var(--engrave);
+  color: var(--brass-bright);
   text-underline-offset: 3px;
 }
 
+::selection {
+  background: rgba(201, 165, 94, 0.35);
+}
+
 :focus-visible {
-  outline: 2px solid var(--engrave);
+  outline: 2px solid var(--brass-bright);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 .num {
@@ -96,15 +118,16 @@ a {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 40px;
-  padding: 0 16px;
+  min-height: 42px;
+  padding: 0 18px;
   border-radius: 999px;
   border: 1px solid transparent;
-  background: var(--engrave);
-  color: #fff;
+  background: var(--text);
+  color: var(--bg);
   font-weight: 600;
+  text-decoration: none;
   cursor: pointer;
-  transition: transform 160ms var(--ease-out), background-color 160ms ease, box-shadow 160ms ease;
+  transition: transform 160ms var(--ease-out), background-color 180ms ease, border-color 180ms ease, color 180ms ease;
   -webkit-tap-highlight-color: transparent;
   white-space: nowrap;
 }
@@ -112,31 +135,44 @@ a {
   transform: scale(0.97);
 }
 .btn:disabled {
-  opacity: 0.55;
+  opacity: 0.45;
   cursor: not-allowed;
   transform: none;
 }
 .btn--quiet {
   background: transparent;
-  color: var(--ink);
-  border-color: var(--rule);
+  color: var(--text);
+  border-color: var(--line-strong);
 }
 .btn--danger {
   background: transparent;
   color: var(--block);
-  border-color: color-mix(in srgb, var(--block) 35%, transparent);
+  border-color: rgba(242, 128, 111, 0.35);
 }
 .btn--small {
   min-height: 32px;
-  padding: 0 12px;
+  padding: 0 13px;
   font-size: 13.5px;
+}
+.btn--big {
+  min-height: 50px;
+  padding: 0 24px;
+  font-size: 16px;
+}
+.btn__arrow {
+  display: inline-block;
+  transition: transform 200ms var(--ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
   .btn:hover:not(:disabled) {
-    background: #243d74;
+    background: #fff8e8;
+  }
+  .btn:hover:not(:disabled) .btn__arrow {
+    transform: translateX(3px);
   }
   .btn--quiet:hover:not(:disabled) {
-    background: var(--paper-deep);
+    background: rgba(237, 230, 211, 0.07);
+    border-color: rgba(237, 230, 211, 0.32);
   }
   .btn--danger:hover:not(:disabled) {
     background: var(--block-wash);
@@ -146,5 +182,19 @@ a {
 .boot {
   margin: 0;
   padding: 48px 28px;
-  color: var(--ink-soft);
+  color: var(--text-soft);
+}
+
+/* Guilloche security patterns, used by the dashboard and the landing page. */
+.guilloche-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.guilloche-band {
+  display: block;
+  width: 100%;
+  height: 30px;
 }
