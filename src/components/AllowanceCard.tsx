@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { DashboardState } from "@/lib/view";
 import { GuillocheBand, GuillocheFrame, GuillocheRosette } from "./Guilloche";
 import { money, PERIOD_WORD, shortDate } from "./format";
+import { LocalTime } from "./LocalTime";
 
 type AllowanceView = DashboardState["allowances"][number];
 
@@ -87,7 +88,7 @@ export function AllowanceCard({ allowance: a, onChanged }: { allowance: Allowanc
           </div>
           <div>
             <dt>Ends</dt>
-            <dd>{a.expiresAt ? shortDate(a.expiresAt) : "No end date"}</dd>
+            <dd>{a.expiresAt ? <LocalTime iso={a.expiresAt} format={shortDate} /> : "No end date"}</dd>
           </div>
         </dl>
 

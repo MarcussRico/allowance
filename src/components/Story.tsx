@@ -2,6 +2,7 @@
 
 import type { DashboardState } from "@/lib/view";
 import { clock } from "./format";
+import { LocalTime } from "./LocalTime";
 import { Slip, type PurchaseView } from "./Slip";
 
 type Run = NonNullable<DashboardState["run"]>;
@@ -66,7 +67,7 @@ export function Story({ run, purchases }: { run: DashboardState["run"]; purchase
       <ol className="story__list" aria-live="polite" aria-relevant="additions">
         {entries.map((entry) => (
           <li key={entry.e.seq} className={`story__entry story__entry--${entry.type} story__kind--${entry.e.kind}`}>
-            <time className="story__time num">{clock(entry.e.at)}</time>
+            <LocalTime className="story__time num" iso={entry.e.at} format={clock} />
             {entry.type === "slip" ? (
               <Slip p={entry.p} />
             ) : entry.type === "say" ? (
