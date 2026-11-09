@@ -44,3 +44,5 @@ next-env.d.ts
 /.data/
 # screenshots from verification runs
 /verify-output/
+
+!.env.example

@@ -106,8 +106,7 @@ function toPurchase(r: Row): Purchase {
 
 // ---------- workspaces ----------
 
-export function createWorkspace(ownerName: string): string {
-  const id = newId("ws");
+export function createWorkspace(ownerName: string, id: string = newId("ws")): string {
   db().prepare("INSERT INTO workspaces (id, owner_name, created_at) VALUES (?, ?, ?)").run(id, ownerName, nowIso());
   return id;
 }
@@ -193,6 +192,9 @@ export function listAllowances(workspaceId: string): AllowanceRow[] {
 }
 
 export function setAllowanceStatus(workspaceId: string, id: string, status: AllowanceStatus): AllowanceRow {
+  const current = getAllowance(id);
+  if (!current || current.workspaceId !== workspaceId) throw new Error("Allowance not found.");
+  if (current.status === "revoked" && status !== "revoked") throw new Error("A revoked allowance can't be turned back on. Create a new one.");
   const res = db().prepare("UPDATE allowances SET status = ? WHERE id = ? AND workspace_id = ?").run(status, id, workspaceId);
   if (res.changes === 0) throw new Error("Allowance not found.");
   if (status === "revoked") {
