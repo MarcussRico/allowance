@@ -23,7 +23,7 @@ async function textOverlaps(page) {
     const els = [...document.querySelectorAll("h1,h2,h3,p,span,dt,dd,li,button,label,time,text,a,strong,code")].filter((el) => {
       const s = getComputedStyle(el);
       if (s.visibility === "hidden" || s.display === "none" || Number(s.opacity) === 0) return false;
-      if (el.closest(".ag-root-wrapper,.visually-hidden,dialog:not([open])")) return false;
+      if (el.closest(".ag-root-wrapper,.visually-hidden,dialog:not([open]),[aria-hidden='true']")) return false;
       const r = el.getBoundingClientRect();
       return r.width > 0 && r.height > 0 && el.childElementCount === 0 && el.textContent.trim().length > 0;
     });
@@ -66,15 +66,15 @@ page.on("pageerror", (e) => consoleErrors.push(e.message));
 await page.goto(BASE);
 await page.getByRole("heading", { name: "Your allowances" }).waitFor();
 await page.screenshot({ path: `${OUT}/01-dashboard.png`, fullPage: true });
-check("dashboard loads with the seeded allowance", await page.getByText("Weekly groceries and books").first().isVisible());
+check("dashboard loads with the seeded allowance", await page.locator(".note__name").first().isVisible());
 check("desktop: no horizontal overflow", await noHorizontalOverflow(page));
 const overlaps1 = await textOverlaps(page);
 check("desktop: no overlapping text", overlaps1.length === 0, overlaps1.slice(0, 4).join(" | "));
 
 // Run the agent on the restock task through the real buttons.
-await page.getByRole("button", { name: "Weekly restock + headphones" }).click();
+await page.getByRole("button", { name: "Restock + headphones" }).click();
 await page.getByRole("button", { name: "Send to agent" }).click();
-const engine = await page.locator(".agent__engine").textContent();
+const engine = await page.locator(".composer__engine").textContent();
 console.log(`      agent engine: ${engine}`);
 
 const held = page.getByRole("heading", { name: "Waiting for you" });
@@ -82,8 +82,9 @@ await held.waitFor({ timeout: 150_000 });
 await page.waitForTimeout(800);
 await page.screenshot({ path: `${OUT}/02-held.png`, fullPage: true });
 check("an out-of-policy purchase is held for the owner", await held.isVisible());
-const paidBefore = await page.locator(".tone--paid").count();
-check("in-policy groceries were paid before the hold", paidBefore >= 1, `${paidBefore} paid step(s) in the feed`);
+const paidBefore = await page.locator(".story .slip--completed").count();
+check("in-policy groceries were paid before the hold", paidBefore >= 1, `${paidBefore} paid slip(s) in the story`);
+check("the pipeline stops the held slip at your rules", (await page.locator(".stage__slip").getAttribute("data-col")) === "1");
 
 // Answer on a phone: open the approval link in a mobile context and press-and-hold.
 const state = await page.evaluate(() => fetch("/api/state").then((r) => r.json()));
@@ -115,7 +116,9 @@ await phone.screenshot({ path: `${OUT}/04-phone-approved.png`, fullPage: true })
 check("phone: press-and-hold approves and pays", true);
 
 // The agent hears the answer and finishes.
-await page.locator(".feed__item--decision").first().waitFor({ timeout: 30_000 });
+await page.locator(".story__kind--decision").first().waitFor({ timeout: 30_000 });
+await page.waitForTimeout(1200);
+check("after approval the slip moves on to PayPal", (await page.locator(".stage__slip").getAttribute("data-col")) === "2");
 await page.getByRole("button", { name: "Send to agent" }).waitFor({ timeout: 120_000 });
 await page.waitForTimeout(1500);
 await page.screenshot({ path: `${OUT}/05-after-approval.png`, fullPage: true });
@@ -126,7 +129,7 @@ check("ledger shows a PayPal order id", (await page.locator(".ag-cell.mono").fil
 // Revoke, then confirm the agent can't spend from it.
 await page.getByRole("button", { name: "Revoke", exact: true }).first().click();
 await page.getByRole("button", { name: "Revoke for good" }).click();
-await page.getByText("Revoked").first().waitFor();
+await page.locator(".note__status--revoked").first().waitFor();
 const key = await page.evaluate(async () => {
   const r = await fetch("/api/allowances", {
     method: "POST",

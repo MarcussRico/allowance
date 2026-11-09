@@ -15,10 +15,10 @@ Agents can already shop, but the only way to let one pay is to give it your card
 ## Two-minute demo
 
 1. Open the app. You land on your own demo workspace, with one allowance already set up: **$60 a week, up to $30 a purchase, groceries and books only**.
-2. Pick **Weekly restock + headphones** and press **Send to agent**. Claude checks the allowance, searches the shops and buys the groceries. They're inside the limits, so PayPal is charged at once and the order id appears in the feed and the ledger.
+2. Pick **Restock + headphones** and press **Send to agent**. Claude checks the allowance, searches the shops and buys the groceries. They're inside the limits, so PayPal is charged at once and the order id appears in the feed and the ledger.
 3. Next it tries **$89 headphones**: electronics, and over the per-purchase limit. The purchase is **held**. A "Waiting for you" panel appears with the plain-English reasons and a QR code.
 4. Scan the QR code with your phone (or open the request link). **Press and hold** to approve. A short tap does nothing, on purpose. PayPal is charged, and the agent, which was waiting, reports back.
-5. Try **Top up a betting account**: the shop is blocked outright. No approval is offered and nothing is charged.
+5. Try **Betting top-up**: the shop is blocked outright. No approval is offered and nothing is charged.
 6. Press **Revoke** on the allowance. Its key stops working at once, and anything still waiting for you is cancelled.
 
 ## How it uses PayPal

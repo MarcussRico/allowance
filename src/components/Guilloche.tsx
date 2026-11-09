@@ -113,3 +113,44 @@ export function GuillocheRosette({ seed, size = 88 }: { seed: string; size?: num
     </svg>
   );
 }
+
+/**
+ * A banknote border: three phase-shifted waves running around the edge of the card.
+ * Drawn in a fixed box and stretched; non-scaling strokes keep the lines hairline.
+ */
+export function GuillocheFrame({ seed }: { seed: string }) {
+  const rand = seeded(`${seed}:frame`);
+  const W = 400;
+  const H = 260;
+  const inset = 7;
+  const amp = 3.2;
+  const waves = 46 + Math.floor(rand() * 10);
+  const perimeter = 2 * (W - 2 * inset) + 2 * (H - 2 * inset);
+  const pointAt = (s: number): [number, number, number, number] => {
+    // Position and inward normal at distance s along the inset rectangle.
+    const w = W - 2 * inset;
+    const h = H - 2 * inset;
+    if (s < w) return [inset + s, inset, 0, 1];
+    if (s < w + h) return [W - inset, inset + (s - w), -1, 0];
+    if (s < 2 * w + h) return [W - inset - (s - w - h), H - inset, 0, -1];
+    return [inset, H - inset - (s - 2 * w - h), 1, 0];
+  };
+  const paths = [0, 1, 2].map((k) => {
+    const steps = 900;
+    let d = "";
+    for (let i = 0; i <= steps; i++) {
+      const s = (i / steps) * perimeter;
+      const [x, y, nx, ny] = pointAt(s % perimeter);
+      const off = amp * Math.sin((s / perimeter) * Math.PI * 2 * waves + (k * Math.PI * 2) / 3);
+      d += `${i === 0 ? "M" : "L"}${f(x + nx * off)} ${f(y + ny * off)}`;
+    }
+    return d;
+  });
+  return (
+    <svg className="guilloche-frame" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
+      {paths.map((d, i) => (
+        <path key={i} d={d} fill="none" stroke="var(--engrave)" strokeOpacity={0.42 - i * 0.08} strokeWidth="0.7" vectorEffect="non-scaling-stroke" />
+      ))}
+    </svg>
+  );
+}

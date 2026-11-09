@@ -2,11 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { DashboardState } from "@/lib/view";
-import { AgentPanel } from "./AgentPanel";
 import { AllowanceCard } from "./AllowanceCard";
+import { Composer } from "./Composer";
 import { HeldRequests } from "./HeldRequests";
 import { Ledger } from "./Ledger";
 import { NewAllowance } from "./NewAllowance";
+import { Stage } from "./Stage";
+import { Story } from "./Story";
 import "./dashboard.css";
 
 const PAYPAL_NOTICE: Record<string, string> = {
@@ -110,6 +112,27 @@ export function Dashboard({ initial, notice }: { initial: DashboardState; notice
         </p>
       )}
 
+      <section className="intro" aria-labelledby="intro-title">
+        <div className="intro__copy">
+          <h1 id="intro-title" className="intro__title">
+            Give your agent an allowance, <em>not your card.</em>
+          </h1>
+          <p className="intro__lede">
+            Your AI agent shops within limits you set and pays through PayPal. Anything outside them waits for you to approve on your
+            phone.
+          </p>
+        </div>
+        <Composer
+          run={state.run}
+          allowances={state.allowances}
+          agentMode={state.agentMode}
+          runsLeft={state.runsLeft}
+          onStarted={refresh}
+        />
+      </section>
+
+      <Stage state={state} />
+
       <main className="board">
         <HeldRequests held={held} agentNames={agentNames} onChanged={refresh} />
 
@@ -127,13 +150,7 @@ export function Dashboard({ initial, notice }: { initial: DashboardState; notice
           </div>
         </section>
 
-        <AgentPanel
-          run={state.run}
-          allowances={state.allowances}
-          agentMode={state.agentMode}
-          runsLeft={state.runsLeft}
-          onStarted={refresh}
-        />
+        <Story run={state.run} purchases={state.purchases} />
 
         <Ledger purchases={state.purchases} agentNames={agentNames} />
       </main>
