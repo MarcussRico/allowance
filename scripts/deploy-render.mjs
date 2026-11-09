@@ -70,7 +70,7 @@ if (!existing) {
     serviceDetails: {
       runtime: "node",
       plan: process.env.RENDER_PLAN || "starter",
-      region: process.env.RENDER_REGION || "singapore",
+      region: process.env.RENDER_REGION || "virginia",
       numInstances: 1,
       healthCheckPath: "/api/health",
       disk: { name: "data", mountPath: "/var/data", sizeGB: 1 },
