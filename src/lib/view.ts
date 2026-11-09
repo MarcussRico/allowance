@@ -12,7 +12,11 @@ export function dashboardState(workspaceId: string) {
     agentMode: process.env.ANTHROPIC_API_KEY ? "claude" : "scripted",
     paypalAccount: ws.vaultId ? { email: ws.payerEmail, shared: false } : vault ? { email: null, shared: true } : null,
     runsLeft: Math.max(0, runLimitPerWorkspace() - ws.runsUsed),
-    allowances: listAllowances(workspaceId).map((a) => ({ ...a, ...summarise(a.id) })),
+    allowances: listAllowances(workspaceId).map((a) => ({
+      ...a,
+      ...summarise(a.id),
+      expired: a.expiresAt ? new Date(a.expiresAt).getTime() < Date.now() : false,
+    })),
     purchases: listPurchases(workspaceId).map(({ approvalToken, ...p }) => ({
       ...p,
       approvalPath: p.status === "held" && approvalToken ? `/approve/${approvalToken}` : null,

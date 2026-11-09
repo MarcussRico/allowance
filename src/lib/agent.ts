@@ -176,14 +176,16 @@ async function runTool(runId: string, allowanceId: string, name: string, input: 
       return msg;
     }
     let p = result.purchase;
-    log(runId, "purchase", describePurchase(p), { purchaseId: p.id, status: p.status, amountCents: p.amountCents });
     if (p.status === "held") {
-      log(runId, "waiting", `Waiting for the owner to approve ${formatCents(p.amountCents)} at ${p.merchantName}`, {
+      log(runId, "waiting", `Asked to spend ${formatCents(p.amountCents)} at ${p.merchantName}. It's outside the allowance, so it's waiting for you.`, {
         purchaseId: p.id,
+        status: "held",
         reasons: p.reasons,
       });
       p = await waitForDecision(p.id, OWNER_WAIT_MS);
       log(runId, "decision", describePurchase(p), { purchaseId: p.id, status: p.status });
+    } else {
+      log(runId, "purchase", describePurchase(p), { purchaseId: p.id, status: p.status, amountCents: p.amountCents });
     }
     return describePurchase(p);
   }
@@ -202,7 +204,16 @@ export function startRun(workspaceId: string, allowanceId: string, task: string)
   db().prepare("UPDATE workspaces SET runs_used = runs_used + 1 WHERE id = ?").run(workspaceId);
   log(runId, "start", task, { mode, model: mode === "claude" ? AGENT_MODEL : null });
 
-  const work = mode === "claude" ? runClaude(runId, allowanceId, task) : runScripted(runId, allowanceId);
+  const work =
+    mode === "claude"
+      ? runClaude(runId, allowanceId, task).catch(async (err) => {
+          // Demo safety: if Claude can't be reached before the agent has done anything, run the scripted task instead.
+          if (!(err instanceof ClaudeUnavailable)) throw err;
+          log(runId, "error", `${err.message} Switching to the scripted demo so the rules and PayPal can still be shown.`);
+          db().prepare("UPDATE runs SET mode = 'scripted' WHERE id = ?").run(runId);
+          await runScripted(runId, allowanceId);
+        })
+      : runScripted(runId, allowanceId);
   work
     .then(() => db().prepare("UPDATE runs SET status = 'done', finished_at = ? WHERE id = ?").run(new Date().toISOString(), runId))
     .catch((err) => {
@@ -212,6 +223,9 @@ export function startRun(workspaceId: string, allowanceId: string, task: string)
     .finally(() => log(runId, "done", "Run finished"));
   return { runId, mode };
 }
+
+/** Claude couldn't be reached before the agent took any action. */
+class ClaudeUnavailable extends Error {}
 
 async function runClaude(runId: string, allowanceId: string, task: string) {
   const client = new Anthropic();
@@ -232,9 +246,11 @@ async function runClaude(runId: string, allowanceId: string, task: string) {
         messages,
       });
     } catch (err) {
-      if (err instanceof Anthropic.AuthenticationError) throw new Error("The Anthropic key was rejected. Check ANTHROPIC_API_KEY.");
-      if (err instanceof Anthropic.RateLimitError) throw new Error("Claude is rate-limited right now. Try again in a minute.");
-      if (err instanceof Anthropic.APIError) throw new Error(`Claude returned an error (${err.status}).`);
+      const Fail = turn === 0 ? ClaudeUnavailable : Error;
+      if (err instanceof Anthropic.AuthenticationError) throw new Fail("The Anthropic key was rejected.");
+      if (err instanceof Anthropic.RateLimitError) throw new Fail("Claude is rate-limited right now.");
+      if (err instanceof Anthropic.APIConnectionError) throw new Fail("Couldn't reach Claude.");
+      if (err instanceof Anthropic.APIError) throw new Fail(`Claude returned an error (${err.status}).`);
       throw err;
     }
 
@@ -266,7 +282,7 @@ async function runClaude(runId: string, allowanceId: string, task: string) {
 /** The demo task without a model: same tools, same rules, fixed steps. */
 async function runScripted(runId: string, allowanceId: string) {
   const pause = (ms: number) => new Promise((r) => setTimeout(r, ms));
-  log(runId, "thinking", "Scripted run: no Anthropic key is set, so these steps are fixed. The rules and PayPal calls are real.");
+  log(runId, "thinking", "Scripted run: these steps are fixed, but every rule check and PayPal call is real.");
   await pause(700);
   await runTool(runId, allowanceId, "check_allowance", {});
   await pause(700);
@@ -284,10 +300,17 @@ async function runScripted(runId: string, allowanceId: string) {
   await pause(700);
   await runTool(runId, allowanceId, "search_shops", { query: "headphones" });
   await pause(700);
-  await runTool(runId, allowanceId, "buy", {
+  const headphones = await runTool(runId, allowanceId, "buy", {
     shop_id: "voltline",
     items: [{ sku: "nc-headphones", qty: 1 }],
     reason: "Replacement for the broken headphones you mentioned.",
   });
-  log(runId, "say", "Restocked the basics at Corner Grocer. The headphones were outside the allowance, so they went to you to decide.");
+  const outcome = headphones.startsWith("Bought")
+    ? "You approved the headphones, so they're bought too."
+    : headphones.includes("declined")
+      ? "You declined the headphones, so I left them."
+      : headphones.startsWith("Blocked")
+        ? "The headphones were blocked, so nothing was charged for them."
+        : "The headphones are still waiting for your answer.";
+  log(runId, "say", `Restocked the basics at Corner Grocer. ${outcome}`);
 }

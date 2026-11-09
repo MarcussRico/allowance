@@ -1,0 +1,28 @@
+# Render blueprint: one web service with a small disk for the SQLite file.
+services:
+  - type: web
+    name: allowance
+    runtime: node
+    plan: starter
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: ALLOWANCE_DB
+        value: /var/data/allowance.db
+      - key: PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_CLIENT_SECRET
+        sync: false
+      - key: DEMO_VAULT_ID
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: APP_URL
+        sync: false
+    disk:
+      name: data
+      mountPath: /var/data
+      sizeGB: 1

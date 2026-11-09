@@ -1,0 +1,159 @@
+.approve {
+  min-height: 100dvh;
+  display: grid;
+  place-items: start center;
+  padding: 24px 16px 40px;
+}
+.approve__card {
+  width: min(460px, 100%);
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  padding: 26px 22px 22px;
+  box-shadow: var(--shadow);
+}
+.approve__eyebrow {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.approve__title {
+  margin: 6px 0 0;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.approve__sub {
+  color: var(--ink-soft);
+}
+.approve__amount {
+  margin: 8px 0 0;
+  font-family: var(--font-display);
+  font-size: 64px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.approve__shop {
+  margin: 6px 0 0;
+  font-size: 16px;
+  color: var(--ink-soft);
+}
+.approve__lines {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 12px 0 0;
+  border-top: 1px dashed var(--rule);
+  font-size: 14.5px;
+}
+.approve__lines li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.approve__lines li span:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.approve__lines li + li {
+  margin-top: 4px;
+}
+.approve__note {
+  margin: 12px 0 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+.approve__why {
+  margin: 18px 0 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--hold);
+}
+.approve__reasons {
+  margin: 0;
+  padding: 12px 14px 12px 30px;
+  background: var(--hold-wash);
+  border-radius: 10px;
+  font-size: 14.5px;
+}
+.approve__reasons li + li {
+  margin-top: 4px;
+}
+.approve__actions {
+  margin-top: 22px;
+  display: grid;
+  gap: 10px;
+}
+.approve__help {
+  margin: 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+.approve__decline {
+  min-height: 48px;
+}
+.approve__result {
+  margin: 22px 0 0;
+  padding: 14px;
+  border-radius: 10px;
+  background: var(--engrave-soft);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.approve__result--declined,
+.approve__result--expired,
+.approve__result--failed,
+.approve__result--held {
+  background: var(--block-wash);
+  color: var(--block);
+}
+.approve__error {
+  margin: 12px 0 0;
+  color: var(--block);
+  font-size: 14px;
+}
+
+/* Hold to approve: the fill sweeps across while held, and snaps back on release. */
+.hold {
+  position: relative;
+  overflow: hidden;
+  min-height: 56px;
+  border-radius: 999px;
+  border: 0;
+  background: var(--engrave);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  transition: transform 160ms var(--ease-out);
+}
+.hold:active {
+  transform: scale(0.97);
+}
+.hold:disabled {
+  opacity: 0.6;
+}
+.hold__fill {
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 200ms var(--ease-out);
+}
+.hold--on .hold__fill {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 1200ms linear;
+}
+.hold__label {
+  position: relative;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hold--on .hold__fill {
+    transition: clip-path 1200ms steps(1, end);
+  }
+}

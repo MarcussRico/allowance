@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "verify": "node scripts/verify.mjs",
+    "mcp": "tsx mcp/server.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.6.0",
@@ -33,5 +36,8 @@
   },
   "allowScripts": {
     "esbuild@0.28.2": true
+  },
+  "engines": {
+    "node": ">=24"
   }
 }
