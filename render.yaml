@@ -9,7 +9,9 @@ services:
     healthCheckPath: /api/health
     envVars:
       - key: NODE_VERSION
-        value: "24"
+        value: "26"
+      - key: MAX_RUNS_PER_DAY
+        value: "300"
       - key: ALLOWANCE_DB
         value: /var/data/allowance.db
       - key: PAYPAL_CLIENT_ID
@@ -19,8 +21,6 @@ services:
       - key: DEMO_VAULT_ID
         sync: false
       - key: ANTHROPIC_API_KEY
-        sync: false
-      - key: APP_URL
         sync: false
     disk:
       name: data

@@ -8,6 +8,8 @@ The agent never sees a card number or a PayPal login. It holds a scoped Allowanc
 
 Built for the [PayPal AI Hackathon](https://paypalaihackathon.devpost.com/) (Nov 2026).
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/MarcussRico/allowance)
+
 ## The problem
 
 Agents can already shop, but the only way to let one pay is to give it your card or your account. That's all-or-nothing: no limits, no way to see what it's doing, no way to stop it except cancelling the card. People won't hand over that much trust, so agentic commerce stalls at "here's a link, you check out". Allowance is the missing middle: you let an agent spend some of your money, on your terms, through the PayPal you already use. See [COMPETITORS.md](COMPETITORS.md) for how this differs from what exists.
@@ -60,7 +62,7 @@ Without PayPal keys the app runs against a clearly labelled **Simulated PayPal**
 
 ## Run it locally
 
-Needs Node 24+.
+Needs Node 24 or later (tested on 26).
 
 ```bash
 npm install
