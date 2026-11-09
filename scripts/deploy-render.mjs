@@ -21,6 +21,7 @@ const local = loadEnvFile(".env.local");
 const get = (k) => process.env[k] || local[k] || "";
 
 const KEY = get("RENDER_API_KEY");
+const PLAN = process.env.RENDER_PLAN || "free";
 if (!KEY) {
   console.error("Set RENDER_API_KEY (Render dashboard → Account settings → API keys).");
   process.exit(1);
@@ -41,7 +42,7 @@ async function render(method, path, body) {
 // App settings. Secrets are sent only if set locally; empty ones are left out so the app falls back cleanly.
 const envVars = [
   { key: "NODE_VERSION", value: "26" },
-  { key: "ALLOWANCE_DB", value: "/var/data/allowance.db" },
+  ...(PLAN === "free" ? [] : [{ key: "ALLOWANCE_DB", value: "/var/data/allowance.db" }]),
   { key: "MAX_RUNS_PER_DAY", value: "300" },
   ...["PAYPAL_CLIENT_ID", "PAYPAL_CLIENT_SECRET", "DEMO_VAULT_ID", "ANTHROPIC_API_KEY"]
     .filter((k) => get(k))
@@ -69,11 +70,12 @@ if (!existing) {
     envVars,
     serviceDetails: {
       runtime: "node",
-      plan: process.env.RENDER_PLAN || "starter",
+      plan: PLAN,
       region: process.env.RENDER_REGION || "virginia",
       numInstances: 1,
       healthCheckPath: "/api/health",
-      disk: { name: "data", mountPath: "/var/data", sizeGB: 1 },
+      // Paid plans keep the database on a disk; the free plan has none, so each restart starts clean.
+      ...(PLAN === "free" ? {} : { disk: { name: "data", mountPath: "/var/data", sizeGB: 1 } }),
       envSpecificDetails: { buildCommand: "npm ci && npm run build", startCommand: "npm start" },
     },
   });

@@ -1,0 +1,19 @@
+# Render's free plan sleeps after 15 minutes without traffic and takes ~50 s to wake.
+# Pinging the health check every 10 minutes keeps the hosted demo awake for judges.
+# Set the repository variable ALLOWANCE_URL to the deployed URL.
+name: Keep the demo awake
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    if: ${{ vars.ALLOWANCE_URL != '' }}
+    steps:
+      - name: Ping health check
+        run: curl --fail --silent --show-error --max-time 90 --retry 2 "${{ vars.ALLOWANCE_URL }}/api/health"

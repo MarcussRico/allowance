@@ -1,9 +1,13 @@
-# Render blueprint: one web service with a small disk for the SQLite file.
+# Render blueprint: one free web service.
+# The free plan has no disk, so the SQLite demo data starts clean after a restart;
+# every visitor gets a freshly seeded workspace anyway. A GitHub Actions job
+# (.github/workflows/keep-awake.yml) pings /api/health so the service doesn't sleep.
 services:
   - type: web
     name: allowance
     runtime: node
-    plan: starter
+    plan: free
+    region: virginia
     buildCommand: npm ci && npm run build
     startCommand: npm start
     healthCheckPath: /api/health
@@ -12,8 +16,6 @@ services:
         value: "26"
       - key: MAX_RUNS_PER_DAY
         value: "300"
-      - key: ALLOWANCE_DB
-        value: /var/data/allowance.db
       - key: PAYPAL_CLIENT_ID
         sync: false
       - key: PAYPAL_CLIENT_SECRET
@@ -22,7 +24,3 @@ services:
         sync: false
       - key: ANTHROPIC_API_KEY
         sync: false
-    disk:
-      name: data
-      mountPath: /var/data
-      sizeGB: 1

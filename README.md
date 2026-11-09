@@ -77,6 +77,10 @@ npm run build && npm start     # http://localhost:3000
 | `ANTHROPIC_API_KEY` | Runs the agent on Claude. | Scripted agent |
 | `APP_URL` | Public URL, used for PayPal return links. | Taken from the request |
 
+### Hosting
+
+The hosted demo runs on Render's free plan (`render.yaml`, or `node scripts/deploy-render.mjs` with a Render API key). The free plan has no disk, so a restart starts the demo data clean. Every visitor gets a freshly set-up workspace anyway. The `Keep the demo awake` GitHub Action pings `/api/health` every 10 minutes so the service doesn't sleep. Set the repository variable `ALLOWANCE_URL` to the deployed URL to turn it on.
+
 Tests: `npm test` runs the rules engine and the purchase flow (`src/lib/*.test.ts`). `node scripts/verify.mjs` drives the whole demo in a real browser: real clicks, a real press-and-hold on a phone-sized screen, and mouse-wheel scrolling in Chromium and WebKit.
 
 ### Connect Claude Desktop or Claude Code (MCP)
